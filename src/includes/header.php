@@ -850,6 +850,12 @@ if (!isLoggedIn()) {
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li>
+                                <a class="dropdown-item" href="/profile.php">
+                                    <i class="bi bi-person"></i> Thông tin cá nhân
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
                                 <a class="dropdown-item" href="/auth/logout.php">
                                     <i class="bi bi-box-arrow-right"></i> Đăng xuất
                                 </a>

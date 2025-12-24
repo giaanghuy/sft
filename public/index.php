@@ -24,12 +24,9 @@ $whereClause = '';
 $params = [];
 
 // ===== PHÂN QUYỀN TRUY CẬP =====
-// User thường chỉ được xem sinh viên do mình tạo
-// Admin được xem tất cả
-if (!isAdmin()) {
-    $whereClause = "WHERE s.user_id = ?";
-    $params[] = $_SESSION['user_id'];
-}
+// User thường và Admin đều xem được tất cả sinh viên
+// User thường không thể thao tác (thêm/sửa/xóa), chỉ xem và tìm kiếm
+// Admin có thể thao tác tất cả
 
 // ===== THÊM ĐIỀU KIỆN TÌM KIẾM =====
 // Tìm kiếm theo họ tên hoặc mã sinh viên
