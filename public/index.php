@@ -69,7 +69,7 @@ $sql = "SELECT s.*, u.username as created_by
         FROM students s 
         LEFT JOIN users u ON s.user_id = u.id 
         {$whereClause}
-        ORDER BY s.id DESC
+        ORDER BY s.created_at ASC, s.id ASC
         LIMIT ? OFFSET ?";
 $stmt = $pdo->prepare($sql);
 // Thêm limit và offset vào params

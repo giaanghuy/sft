@@ -17,8 +17,8 @@ RUN sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.c
 
 # Cấu hình PHP default charset UTF-8
 RUN echo "default_charset = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini && \
-    echo "mbstring.internal_encoding = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini && \
-    echo "mbstring.http_output = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini
+    echo "mbstring.internal_encoding = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini
+# mbstring.http_output đã deprecated trong PHP 8.1+, không cần set nữa
 
 # Copy source code vào container
 COPY . /var/www/html/

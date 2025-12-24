@@ -24,7 +24,7 @@ try {
 
     // Đảm bảo PHP sử dụng UTF-8
     mb_internal_encoding('UTF-8');
-    mb_http_output('UTF-8');
+    // mb_http_output đã deprecated trong PHP 8.1+, không cần set nữa
 
     echo "=== SEED DỮ LIỆU MẪU TỪ JSON ===\n\n";
 
@@ -155,15 +155,6 @@ try {
     }
 
     echo "→ Tổng: {$studentCount} students mới, {$studentSkipped} students đã tồn tại/bỏ qua\n\n";
-
-    // Reset AUTO_INCREMENT nếu cần
-    $stmt = $pdo->query("SELECT MAX(id) as max_id FROM students");
-    $maxId = $stmt->fetch()['max_id'];
-    if ($maxId) {
-        $nextId = $maxId + 1;
-        $pdo->exec("ALTER TABLE students AUTO_INCREMENT = {$nextId}");
-        echo "✓ Đã reset AUTO_INCREMENT của bảng students về {$nextId}\n";
-    }
 
     echo "\n=== HOÀN TẤT SEED DỮ LIỆU ===\n";
     echo "✓ Tổng cộng: " . ($userCount + $userUpdated) . " users, {$studentCount} students mới\n";

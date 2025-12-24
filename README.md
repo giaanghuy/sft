@@ -40,19 +40,38 @@
 git clone <repository-url>
 cd sft
 
-# 2. Build và khởi động containers
-docker-compose up -d
+# 2. Build và khởi động containers (bao gồm phpMyAdmin cho dev)
+docker-compose --profile dev up -d
 
 # 3. Đợi vài giây để database khởi động và import dữ liệu
 
 # 4. Truy cập ứng dụng
 # Mở trình duyệt: http://localhost:3000
 # Hoặc truy cập trực tiếp: http://localhost:3000/login.php
+
+# 5. Truy cập phpMyAdmin để quản lý database
+# URL: http://localhost:8080
+# Đăng nhập với:
+#   - Server: db (hoặc để trống)
+#   - Username: root
+#   - Password: rootpassword
+# Hoặc đăng nhập với user thường:
+#   - Username: student_user
+#   - Password: student_password
+```
+
+### Khởi tạo Database
+
+Nếu database chưa được tạo tự động (thường xảy ra khi volume đã tồn tại từ trước), bạn cần chạy script khởi tạo:
+
+```bash
+# Khởi tạo database và các bảng
+docker-compose exec web php scripts/init_database.php
 ```
 
 ### Seed Dữ liệu Mẫu
 
-Sau khi container khởi động, bạn cần chạy lệnh để seed dữ liệu mẫu:
+Sau khi database đã được khởi tạo, bạn cần chạy lệnh để seed dữ liệu mẫu:
 
 ```bash
 # Seed dữ liệu từ JSON (users và students)
@@ -75,17 +94,57 @@ Dữ liệu mẫu bao gồm **10 users** và **20 sinh viên** với thông tin 
 
 > **Lưu ý**: Dữ liệu mẫu **KHÔNG** tự động seed khi container khởi động. Bạn phải chạy lệnh seed thủ công sau khi container đã sẵn sàng.
 
+### Quản lý Database với phpMyAdmin
+
+phpMyAdmin đã được cấu hình sẵn trong docker-compose để quản lý database một cách trực quan (tương tự XAMPP).
+
+```bash
+# Khởi động phpMyAdmin (chạy cùng với các services khác)
+docker-compose --profile dev up -d
+
+# Hoặc chỉ khởi động phpMyAdmin sau khi đã có web và db
+docker-compose --profile dev up -d phpmyadmin
+
+# Truy cập phpMyAdmin
+# URL: http://localhost:8080
+```
+
+**Thông tin đăng nhập phpMyAdmin:**
+
+- **Root user** (toàn quyền):
+  - Server: `db` (hoặc để trống)
+  - Username: `root`
+  - Password: `rootpassword`
+
+- **Application user** (quyền hạn chế):
+  - Server: `db` (hoặc để trống)
+  - Username: `student_user`
+  - Password: `student_password`
+
+> **Lưu ý**: phpMyAdmin chỉ chạy khi sử dụng profile `dev`. Để chạy tất cả services bao gồm phpMyAdmin, dùng: `docker-compose --profile dev up -d`
+
 ### Các lệnh Docker hữu ích
 
 ```bash
 # Xem logs
 docker-compose logs -f
 
+# Xem logs của service cụ thể
+docker-compose logs -f web
+docker-compose logs -f db
+docker-compose logs -f phpmyadmin
+
 # Dừng containers
 docker-compose stop
 
 # Khởi động lại
 docker-compose restart
+
+# Dừng và xóa containers (giữ data)
+docker-compose down
+
+# Dừng và xóa tất cả (bao gồm volumes - mất data)
+docker-compose down -v
 
 # Dừng và xóa containers
 docker-compose down
@@ -97,7 +156,9 @@ docker-compose down -v
 docker-compose up -d --build
 ```
 
-Xem file [docs/DOCKER.md](docs/DOCKER.md) để biết thêm chi tiết về Docker.
+Xem các file tài liệu để biết thêm chi tiết:
+- [docs/DOCKER.md](docs/DOCKER.md) - Hướng dẫn về Docker
+- [docs/PHPMYADMIN.md](docs/PHPMYADMIN.md) - Hướng dẫn sử dụng phpMyAdmin
 
 ## Cấu hình Port
 
@@ -160,6 +221,7 @@ sft/
 ├── .dockerignore
 ├── docs/                 # Tài liệu
 │   ├── DOCKER.md       # Hướng dẫn Docker
+│   ├── PHPMYADMIN.md   # Hướng dẫn phpMyAdmin
 │   ├── STRUCTURE.md    # Chi tiết về cấu trúc thư mục
 │   ├── INSTALLATION.md # Hướng dẫn cài đặt chi tiết
 │   └── FEATURES.md     # Danh sách tính năng
@@ -374,6 +436,34 @@ docker-compose exec db mysqladmin ping -h localhost -u root -prootpassword
 2. Kiểm tra environment variables trong container web:
 ```bash
 docker-compose exec web env | grep DB_
+```
+
+### Lỗi "Table doesn't exist" khi seed dữ liệu
+
+Nếu gặp lỗi `Table 'student_management.users' doesn't exist` khi chạy seed:
+
+1. **Khởi tạo database và các bảng:**
+```bash
+docker-compose exec web php scripts/init_database.php
+```
+
+2. **Sau đó seed dữ liệu:**
+```bash
+docker-compose exec web php scripts/seed_data.php
+```
+
+**Nguyên nhân:** MySQL chỉ chạy script trong `/docker-entrypoint-initdb.d/` khi volume còn trống. Nếu volume đã tồn tại từ trước, script sẽ không chạy lại.
+
+**Giải pháp thay thế:** Xóa volume và tạo lại từ đầu:
+```bash
+# Xóa tất cả containers và volumes
+docker-compose down -v
+
+# Khởi động lại (database sẽ được tạo tự động)
+docker-compose up -d
+
+# Đợi vài giây, sau đó seed dữ liệu
+docker-compose exec web php scripts/seed_data.php
 ```
 
 ### Port đã được sử dụng

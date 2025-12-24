@@ -34,7 +34,7 @@ $pdo = getDBConnection();
 // Không cần parameters vì query không có user input
 $sql = "SELECT id, username, email, role, created_at 
         FROM users 
-        ORDER BY id DESC";
+        ORDER BY created_at ASC, id ASC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $users = $stmt->fetchAll();

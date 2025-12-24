@@ -20,3 +20,4 @@ if (!isset($_SESSION)) {
 // Set test environment
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+

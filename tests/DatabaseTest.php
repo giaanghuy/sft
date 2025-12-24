@@ -169,3 +169,4 @@ if (php_sapi_name() === 'cli' && basename(__FILE__) === basename($_SERVER['PHP_S
     $success = $test->runAll();
     exit($success ? 0 : 1);
 }
+
