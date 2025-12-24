@@ -1,0 +1,24 @@
+# Bật rewrite engine
+RewriteEngine On
+
+# Nếu file hoặc thư mục tồn tại, phục vụ trực tiếp
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Nếu không phải file hoặc thư mục, chuyển hướng về index.php
+# RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Set default charset UTF-8
+AddDefaultCharset UTF-8
+
+# Bảo vệ file .htaccess
+<Files ".htaccess">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Bảo vệ các file trong thư mục cha
+<FilesMatch "\.(php|sql|md)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>

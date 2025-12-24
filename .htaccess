@@ -1,0 +1,23 @@
+# Bảo vệ file config.php khỏi truy cập trực tiếp
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Bảo vệ file generate_password_hash.php
+<Files "generate_password_hash.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Bật rewrite engine (nếu cần)
+RewriteEngine On
+
+# Chuyển hướng đến login.php nếu chưa đăng nhập (tùy chọn)
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_URI} !^/login.php
+# RewriteCond %{REQUEST_URI} !^/register.php
+# RewriteRule ^(.*)$ login.php [L]
+
+
