@@ -51,4 +51,3 @@ if ($allPassed) {
 echo "\n";
 
 exit($allPassed ? 0 : 1);
-
