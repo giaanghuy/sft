@@ -427,10 +427,6 @@ docker-compose exec web php scripts/seed_data.php
 - Giao diện đơn giản, sạch sẽ, dễ sử dụng
 - Responsive trên mobile và tablet
 
-## 📄 License
-
-Dự án này được tạo cho mục đích học tập và demo.
-
 ---
 
 **Tác giả**: [github.com/lehuygiang28](https://github.com/lehuygiang28)
