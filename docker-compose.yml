@@ -1,7 +1,10 @@
 services:
-  # MySQL Database Service
+  # MySQL Database Service (build custom image để đóng gói database.sql, tránh lỗi mount trên Coolify)
   db:
-    image: mysql:8.0
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    image: student_management_db:latest
     container_name: student_management_db
     restart: unless-stopped
     environment:
@@ -14,7 +17,6 @@ services:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./database/database.sql:/docker-entrypoint-initdb.d/database.sql:ro
     networks:
       - student_network
     healthcheck:
