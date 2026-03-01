@@ -19,7 +19,26 @@ try {
     sleep 2
 done
 
+# Trên deployment server (và khi volume DB đã có data cũ), MySQL không chạy lại init script
+# nên bảng có thể chưa tồn tại. Tự động chạy schema + seed nếu thiếu bảng users.
+cd /var/www/html
+if ! php -r "
+try {
+    \$pdo = new PDO('mysql:host=db;dbname=student_management;charset=utf8mb4', 'student_user', 'student_password');
+    \$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    \$pdo->query('SELECT 1 FROM users LIMIT 1');
+    exit(0);
+} catch (Throwable \$e) {
+    exit(1);
+}
+" 2>/dev/null; then
+    echo "Tables missing. Running schema and seed..."
+    php scripts/init_database.php
+    php scripts/init_users.php
+    php scripts/init_students.php 2>/dev/null || true
+    echo "Schema and seed done."
+fi
+
 echo "Starting Apache..."
-# Start Apache (luôn chạy dù script seed có lỗi hay không)
 exec docker-php-entrypoint apache2-foreground
 

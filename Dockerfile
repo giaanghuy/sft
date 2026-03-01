@@ -15,10 +15,11 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # Cấu hình AllowOverride để .htaccess hoạt động
 RUN sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Cấu hình PHP default charset UTF-8
-RUN echo "default_charset = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini && \
-    echo "mbstring.internal_encoding = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini
-# mbstring.http_output đã deprecated trong PHP 8.1+, không cần set nữa
+# Tránh cảnh báo "Could not reliably determine the server's fully qualified domain name"
+RUN echo 'ServerName localhost' >> /etc/apache2/apache2.conf
+
+# Cấu hình PHP default charset UTF-8 (mbstring.internal_encoding deprecated từ PHP 8.1, chỉ dùng default_charset)
+RUN echo "default_charset = UTF-8" >> /usr/local/etc/php/conf.d/charset.ini
 
 # Copy source code vào container
 COPY . /var/www/html/

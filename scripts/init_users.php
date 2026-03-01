@@ -27,9 +27,11 @@ try {
     $pdo->exec("SET CHARACTER SET utf8mb4");
     $pdo->exec("SET character_set_connection=utf8mb4");
     
-    // Đảm bảo PHP sử dụng UTF-8
+    // Đảm bảo PHP sử dụng UTF-8 (mb_http_output deprecated từ PHP 8.1)
     mb_internal_encoding('UTF-8');
-    mb_http_output('UTF-8');
+    if (function_exists('mb_http_output')) {
+        @mb_http_output('UTF-8');
+    }
     
     echo "=== Khởi tạo tài khoản mẫu ===\n";
     
