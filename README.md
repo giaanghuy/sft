@@ -4,8 +4,13 @@
 
 **Tác giả**: [github.com/lehuygiang28](https://github.com/lehuygiang28)
 
+### Tài liệu đề bài & thiết kế
+
+- **[docs/ASSIGNMENT_AND_DESIGN.md](docs/ASSIGNMENT_AND_DESIGN.md)** – Đề bài gốc, phân tích đề bài và giải thích tại sao code được tổ chức và triển khai như hiện tại (ý nghĩa `user_id`, phân quyền, cấu trúc file, bảo mật, seed, v.v.).
+
 ## 📋 Mục lục
 
+- [Tài liệu đề bài & thiết kế](#tài-liệu-đề-bài--thiết-kế)
 - [Tính năng](#tính-năng)
 - [Yêu cầu hệ thống](#yêu-cầu-hệ-thống)
 - [Cài đặt và Chạy](#cài-đặt-và-chạy)
