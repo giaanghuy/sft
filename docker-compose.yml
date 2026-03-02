@@ -45,7 +45,9 @@ services:
       - DB_NAME=student_management
       - DB_USER=student_user
       - DB_PASS=student_password
-    # Entrypoint script sẽ tự động chạy init_users.php và start Apache
+      # DB_FORCE_INIT=1: xoá hết DB và init lại từ đầu
+      - DB_FORCE_INIT=${DB_FORCE_INIT:-0}
+      - DB_ROOT_PASS=rootpassword
 
   # phpMyAdmin - Database Management Tool (Dev only)
   phpmyadmin:
