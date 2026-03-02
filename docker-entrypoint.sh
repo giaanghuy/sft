@@ -19,6 +19,9 @@ try {
     sleep 2
 done
 
+# Chờ thêm vài giây để MySQL ổn định (tránh lỗi khi chạy init ngay lập tức)
+sleep 3
+
 # Trên deployment server (và khi volume DB đã có data cũ), MySQL không chạy lại init script
 # nên bảng có thể chưa tồn tại. Tự động chạy schema + seed nếu thiếu bảng users.
 cd /var/www/html
@@ -33,9 +36,18 @@ try {
 }
 " 2>/dev/null; then
     echo "Tables missing. Running schema and seed..."
-    php scripts/init_database.php
-    php scripts/init_users.php
-    php scripts/init_students.php 2>/dev/null || true
+    # Kiểm tra file cần thiết tồn tại (tránh lỗi khi volume mount sai)
+    if [ ! -f "database/database.sql" ]; then
+        echo "ERROR: database/database.sql not found. Check volume mount."
+        exit 1
+    fi
+    if [ ! -f "scripts/init_database.php" ]; then
+        echo "ERROR: scripts/init_database.php not found. Check volume mount."
+        exit 1
+    fi
+    php scripts/init_database.php || { echo "ERROR: init_database.php failed"; exit 1; }
+    php scripts/init_users.php || { echo "ERROR: init_users.php failed"; exit 1; }
+    php scripts/init_students.php || { echo "WARN: init_students.php failed (non-fatal)"; }
     echo "Schema and seed done."
 fi
 
