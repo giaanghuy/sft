@@ -365,12 +365,10 @@ Sau khi seed dữ liệu, bạn có thể đăng nhập với:
 
 ### Admin
 - **Username**: `admin` / **Password**: `admin123`
-- **Username**: `admin2` / **Password**: `admin123`
 
 ### User thường
-- **Username**: `nguyenvana` / **Password**: `user123`
-- **Username**: `tranthibinh` / **Password**: `user123`
-- **Username**: `levancuong` / **Password**: `user123`
+- **Username**: `user1` / **Password**: `user123`
+- **Username**: `user2` / **Password**: `user123`
 
 ## 🔧 Troubleshooting
 
