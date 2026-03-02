@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS students (
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     address TEXT NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL COMMENT 'Người tạo bản ghi (liên kết users.id). Chỉ admin được thêm SV nên thường là admin.',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

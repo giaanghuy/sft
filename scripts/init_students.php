@@ -40,21 +40,18 @@ try {
         exit(0);
     }
     
-    // Lấy user_id của admin và user1 để gán cho students
+    // user_id = người "tạo" bản ghi sinh viên (hiển thị "Người tạo" trên danh sách).
+    // Dữ liệu mẫu gán hết cho admin cho thống nhất.
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->execute(['admin']);
     $admin = $stmt->fetch();
     
-    $stmt->execute(['user1']);
-    $user1 = $stmt->fetch();
-    
-    if (!$admin || !$user1) {
-        echo "✗ Lỗi: Users chưa được tạo. Vui lòng chạy init_users.php trước.\n";
+    if (!$admin) {
+        echo "✗ Lỗi: User admin chưa tồn tại. Vui lòng chạy init_users.php trước.\n";
         exit(1);
     }
     
     $adminId = $admin['id'];
-    $user1Id = $user1['id'];
     
     // Danh sách students mẫu - Thông tin thực tế ở Hà Nội
     $sampleStudents = [
@@ -86,7 +83,7 @@ try {
             'email' => 'levancuong@vtc.edu.vn',
             'phone' => '0923456789',
             'address' => '123 Phố Huế, P. Ngô Thì Nhậm, Q. Hai Bà Trưng, Hà Nội',
-            'user_id' => $user1Id
+            'user_id' => $adminId
         ],
         [
             'student_code' => 'SV004',
@@ -106,7 +103,157 @@ try {
             'email' => 'hoangvanem@vtc.edu.vn',
             'phone' => '0945678901',
             'address' => '56 Giải Phóng, P. Đồng Tâm, Q. Hai Bà Trưng, Hà Nội',
-            'user_id' => $user1Id
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV006',
+            'full_name' => 'Vũ Thị Phương',
+            'birthday' => '2001-02-14',
+            'gender' => 'Nữ',
+            'email' => 'vuthiphuong@vtc.edu.vn',
+            'phone' => '0956789012',
+            'address' => '22 Trần Đại Nghĩa, P. Bách Khoa, Q. Hai Bà Trưng, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV007',
+            'full_name' => 'Đặng Văn Hải',
+            'birthday' => '2000-09-08',
+            'gender' => 'Nam',
+            'email' => 'dangvanhai@vtc.edu.vn',
+            'phone' => '0967890123',
+            'address' => '91 Chùa Láng, P. Láng Thượng, Q. Đống Đa, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV008',
+            'full_name' => 'Ngô Thị Lan',
+            'birthday' => '2001-12-03',
+            'gender' => 'Nữ',
+            'email' => 'ngothilan@vtc.edu.vn',
+            'phone' => '0978901234',
+            'address' => '15 Tây Sơn, P. Quang Trung, Q. Đống Đa, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV009',
+            'full_name' => 'Bùi Văn Kiên',
+            'birthday' => '2000-04-19',
+            'gender' => 'Nam',
+            'email' => 'buivankien@vtc.edu.vn',
+            'phone' => '0989012345',
+            'address' => '88 Lạc Long Quân, P. Nghĩa Đô, Q. Cầu Giấy, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV010',
+            'full_name' => 'Đinh Thị Mai',
+            'birthday' => '2001-06-22',
+            'gender' => 'Nữ',
+            'email' => 'dinhthimai@vtc.edu.vn',
+            'phone' => '0990123456',
+            'address' => '42 Xuân Thủy, P. Dịch Vọng Hậu, Q. Cầu Giấy, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV011',
+            'full_name' => 'Phan Văn Nam',
+            'birthday' => '2000-08-11',
+            'gender' => 'Nam',
+            'email' => 'phanvannam@vtc.edu.vn',
+            'phone' => '0901234567',
+            'address' => '7 Hoàng Quốc Việt, P. Nghĩa Đô, Q. Cầu Giấy, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV012',
+            'full_name' => 'Trương Thị Oanh',
+            'birthday' => '2001-01-27',
+            'gender' => 'Nữ',
+            'email' => 'truongthioanh@vtc.edu.vn',
+            'phone' => '0912345679',
+            'address' => '156 Đội Cấn, P. Đội Cấn, Q. Ba Đình, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV013',
+            'full_name' => 'Hồ Văn Phúc',
+            'birthday' => '2000-10-05',
+            'gender' => 'Nam',
+            'email' => 'hovanphuc@vtc.edu.vn',
+            'phone' => '0923456780',
+            'address' => '25 Liễu Giai, P. Ngọc Khánh, Q. Ba Đình, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV014',
+            'full_name' => 'Lý Thị Quỳnh',
+            'birthday' => '2001-07-16',
+            'gender' => 'Nữ',
+            'email' => 'lythiquynh@vtc.edu.vn',
+            'phone' => '0934567891',
+            'address' => '89 Kim Mã, P. Kim Mã, Q. Ba Đình, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV015',
+            'full_name' => 'Chu Văn Sơn',
+            'birthday' => '2000-03-09',
+            'gender' => 'Nam',
+            'email' => 'chuvanson@vtc.edu.vn',
+            'phone' => '0945678902',
+            'address' => '33 Điện Biên Phủ, P. Điện Biên, Q. Ba Đình, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV016',
+            'full_name' => 'Tạ Thị Thu',
+            'birthday' => '2001-11-30',
+            'gender' => 'Nữ',
+            'email' => 'tathithu@vtc.edu.vn',
+            'phone' => '0956789013',
+            'address' => '61 Nguyễn Thái Học, P. Điện Biên, Q. Ba Đình, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV017',
+            'full_name' => 'Ông Văn Tuấn',
+            'birthday' => '2000-05-17',
+            'gender' => 'Nam',
+            'email' => 'ongvantuan@vtc.edu.vn',
+            'phone' => '0967890124',
+            'address' => '12 Ngọc Hà, P. Đội Cấn, Q. Ba Đình, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV018',
+            'full_name' => 'Dương Thị Uyên',
+            'birthday' => '2001-09-24',
+            'gender' => 'Nữ',
+            'email' => 'duongthiyen@vtc.edu.vn',
+            'phone' => '0978901235',
+            'address' => '48 Vạn Phúc, P. Vạn Phúc, Q. Hà Đông, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV019',
+            'full_name' => 'Quách Văn Việt',
+            'birthday' => '2000-12-01',
+            'gender' => 'Nam',
+            'email' => 'quachvanviet@vtc.edu.vn',
+            'phone' => '0989012346',
+            'address' => '72 Quang Trung, P. Quang Trung, Q. Hà Đông, Hà Nội',
+            'user_id' => $adminId
+        ],
+        [
+            'student_code' => 'SV020',
+            'full_name' => 'Kiều Thị Xoan',
+            'birthday' => '2001-04-12',
+            'gender' => 'Nữ',
+            'email' => 'kieuthixoan@vtc.edu.vn',
+            'phone' => '0990123457',
+            'address' => '38 Phùng Hưng, P. Trung Hòa, Q. Cầu Giấy, Hà Nội',
+            'user_id' => $adminId
         ]
     ];
     
