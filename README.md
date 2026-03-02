@@ -78,30 +78,65 @@ git clone <repository-url>
 cd sft
 ```
 
-#### Bước 2: Khởi động containers
+#### Bước 2: Khởi động containers (1 lệnh duy nhất)
 
 ```bash
-# Build và khởi động tất cả services
-docker-compose up -d
+# Docker Compose v2 (khuyến nghị)
+docker compose up -d
 
-# Hoặc với phpMyAdmin (cho development)
+# Bật thêm phpMyAdmin (chỉ dùng cho development)
+docker compose --profile dev up -d
+```
+
+> Khi dùng Docker Compose, container `web` sẽ chạy script `docker-entrypoint.sh` để:
+> - Đợi database `db` sẵn sàng.
+> - Tự động import `database/database.sql` (schema).
+> - Tự động tạo tài khoản mẫu (`scripts/init_users.php`).
+> - Tự động tạo dữ liệu sinh viên mẫu (`scripts/init_students.php`) nếu bảng `users` chưa có dữ liệu.
+>
+> Vì vậy **bình thường chỉ cần đúng 1 lệnh `docker compose up -d`**, không cần chạy thêm các script khởi tạo/seed thủ công.
+
+Nếu môi trường của bạn chỉ hỗ trợ `docker-compose` (Compose v1), có thể dùng:
+
+```bash
+docker-compose up -d
 docker-compose --profile dev up -d
 ```
 
-#### Bước 3: Khởi tạo Database
+#### (Tuỳ chọn) Bước 3: Khởi tạo Database thủ công
 
-Nếu database chưa được tạo tự động, chạy script khởi tạo:
+Trong trường hợp bạn muốn tự điều khiển quá trình khởi tạo (hoặc đang chạy ngoài Docker), có thể chạy:
 
 ```bash
 # Khởi tạo database và các bảng
-docker-compose exec web php scripts/init_database.php
+docker compose exec web php scripts/init_database.php
 ```
 
-#### Bước 4: Seed dữ liệu mẫu
+#### (Tuỳ chọn) Bước 4: Seed dữ liệu mẫu thủ công
 
 ```bash
 # Seed dữ liệu từ JSON (users và students)
-docker-compose exec web php scripts/seed_data.php
+docker compose exec web php scripts/seed_data.php
+```
+
+#### (Tuỳ chọn) Reset toàn bộ database với `DB_FORCE_INIT`
+
+Biến môi trường `DB_FORCE_INIT` được định nghĩa trong service `web` của `docker-compose.yml`:
+
+- **`DB_FORCE_INIT=1`**: xoá toàn bộ database `student_management` và khởi tạo + seed lại từ đầu.
+- **`DB_FORCE_INIT=0` (mặc định)**: chỉ khởi tạo/seed khi chưa có user nào trong bảng `users`.
+
+Ví dụ:
+
+```bash
+# Linux/macOS
+DB_FORCE_INIT=1 docker compose up -d --build
+```
+
+```powershell
+# Windows PowerShell
+$env:DB_FORCE_INIT = "1"
+docker compose up -d --build
 ```
 
 #### Bước 5: Truy cập ứng dụng
